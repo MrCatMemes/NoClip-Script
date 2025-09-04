@@ -1,38 +1,64 @@
--- ScreenGui erstellen
-local gui = Instance.new("ScreenGui")
-gui.Name = "NoclipGUI"
-gui.ResetOnSpawn = false
-gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+-- NoClip Script by MrCatMemes 🚀
 
--- Frame (Fenster)
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 100)
-frame.Position = UDim2.new(0.5, -100, 0.5, -50)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-frame.Active = true
-frame.Draggable = true
-frame.Parent = gui
+-- GUI Setup
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Button = Instance.new("TextButton")
 
--- Button
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(1, -20, 0, 40)
-button.Position = UDim2.new(0, 10, 0, 30)
-button.Text = "Noclip: OFF"
-button.TextColor3 = Color3.new(1,1,1)
-button.BackgroundColor3 = Color3.fromRGB(200,0,0)
-button.Parent = frame
+ScreenGui.Name = "NoClipGui"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Noclip Logik (Platzhalter!)
-local noclip = false
-button.MouseButton1Click:Connect(function()
-    noclip = not noclip
-    button.Text = "Noclip: " .. (noclip and "ON" or "OFF")
-    button.BackgroundColor3 = noclip and Color3.fromRGB(0,200,0) or Color3.fromRGB(200,0,0)
+Frame.Size = UDim2.new(0, 200, 0, 100)
+Frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.Parent = ScreenGui
 
-    if noclip then
-        print("✅ Noclip aktiviert (Platzhalter)")
-        -- Hier würdest du später die Noclip-Logik einsetzen
+Button.Size = UDim2.new(1, -20, 0, 40)
+Button.Position = UDim2.new(0, 10, 0, 30)
+Button.Text = "NoClip OFF"
+Button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+Button.TextColor3 = Color3.new(1, 1, 1)
+Button.Parent = Frame
+
+-- NoClip Funktion
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+local noclipEnabled = false
+local connection
+
+local function enableNoClip()
+    connection = RunService.Stepped:Connect(function()
+        if LocalPlayer.Character then
+            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end
+
+local function disableNoClip()
+    if connection then
+        connection:Disconnect()
+        connection = nil
+    end
+end
+
+-- Button Toggle
+Button.MouseButton1Click:Connect(function()
+    noclipEnabled = not noclipEnabled
+    if noclipEnabled then
+        Button.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        Button.Text = "NoClip ON"
+        print("[NoClip] aktiviert ✅")
+        enableNoClip()
     else
-        print("❌ Noclip deaktiviert")
+        Button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        Button.Text = "NoClip OFF"
+        print("[NoClip] deaktiviert ❌")
+        disableNoClip()
     end
 end)
