@@ -5,12 +5,13 @@ local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local Button = Instance.new("TextButton")
 local UICorner = Instance.new("UICorner")
+local Label = Instance.new("TextLabel")
 
 ScreenGui.Name = "NoClipGui"
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-Frame.Size = UDim2.new(0, 200, 0, 100)
-Frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+Frame.Size = UDim2.new(0, 220, 0, 130)
+Frame.Position = UDim2.new(0.5, -110, 0.5, -65)
 Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Frame.Parent = ScreenGui
 
@@ -26,17 +27,24 @@ Button.Font = Enum.Font.GothamBold
 Button.TextSize = 16
 Button.Parent = Frame
 
--- Dragging System (modern)
+Label.Size = UDim2.new(1, -20, 0, 20)
+Label.Position = UDim2.new(0, 10, 0, 80)
+Label.BackgroundTransparency = 1
+Label.Text = "by MrCatMemes 😎"
+Label.TextColor3 = Color3.fromRGB(200, 200, 200)
+Label.Font = Enum.Font.Gotham
+Label.TextSize = 14
+Label.Parent = Frame
+
+-- Dragging System
 local UserInputService = game:GetService("UserInputService")
-local dragging = false
-local dragInput, dragStart, startPos
+local dragging, dragInput, dragStart, startPos
 
 Frame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = true
         dragStart = input.Position
         startPos = Frame.Position
-
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
